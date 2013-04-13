@@ -455,7 +455,11 @@ tLuaDispatch::tLuaDispatch(lua_State* p_L, ITypeInfo * pTypeinfo, int ref)
   cpc = NULL;
   classinfo2 = NULL;
 
+#if _MSC_VER < 1300
+  ID = InterlockedIncrement((long*)&(tLuaDispatch::NEXT_ID));
+#else
   ID = InterlockedIncrement(&(tLuaDispatch::NEXT_ID));
+#endif
   tUtil::log_verbose("tLuaDispatch", "%.4d:created", ID);
 
   return;

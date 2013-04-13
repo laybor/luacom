@@ -559,10 +559,18 @@ void tLuaCOMTypeHandler::lua2com(lua_State* L, stkIndex luaval, VARIANTARG& varg
             VariantChangeType(&varg, &varg, 0, VT_DECIMAL);
           } else if(strcmp(vtype, "int8") == 0) {
             varg.vt = VT_I8;
+#if _MSC_VER < 1300
+			varg.cyVal.int64 = (LONGLONG)lua_tonumber(L, -1);
+#else
             varg.llVal = (LONGLONG)lua_tonumber(L, -1);
+#endif
           } else if(strcmp(vtype, "uint8") == 0) {
             varg.vt = VT_UI8;
+#if _MSC_VER < 1300
+            varg.cyVal.int64 = (ULONGLONG)lua_tonumber(L, -1);
+#else
             varg.ullVal = (ULONGLONG)lua_tonumber(L, -1);
+#endif
           } else if(strcmp(vtype, "int4") == 0) {
             varg.vt = VT_I4;
             varg.lVal = (int)lua_tonumber(L, -1);

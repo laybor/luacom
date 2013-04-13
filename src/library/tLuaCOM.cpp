@@ -75,7 +75,11 @@ tLuaCOM::tLuaCOM(lua_State* L,
   for(i = 0; i < MAX_FUNCINFOS; i++)
     pFuncInfo[i].name = NULL;
 
+#if _MSC_VER < 1300
+  ID = InterlockedIncrement((long*)&(tLuaCOM::NEXT_ID));
+#else
   ID = InterlockedIncrement(&(tLuaCOM::NEXT_ID));
+#endif
 
 #ifdef VERBOSE
   {

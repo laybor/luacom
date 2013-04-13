@@ -110,7 +110,11 @@ static HWND GetParkingWindow()
   wndclass.lpszClassName = "LuaCOM_Parking";
   if (! ::RegisterClassA(&wndclass)) {
     FAIL("Couldn't register parking window class!");
+#if _MSC_VER < 1300
+	return NULL;
+#else
     return g_NULL;
+#endif
   }
 
   // create window
@@ -881,6 +885,17 @@ STDMETHODIMP tLuaControl::Draw(
   ::SetViewportOrgEx(hdcDraw, prcBounds->left, prcBounds->top, &ptVOrg);
 
   // paint (WM_PAINT)
+#if _MSC_VER<1300 
+#if !defined(GetWindowLongPtr)
+	#define GetWindowLongPtr(a,b)	GetWindowLong(a,(DWORD)b)
+#endif
+#if !defined(GWLP_WNDPROC)
+	#define GWLP_WNDPROC GWL_WNDPROC
+#endif
+#if !defined(DWLP_DLGPROC)
+	#define DWLP_DLGPROC DWL_DLGPROC
+#endif
+#endif
   WNDPROC wndProc       = (WNDPROC)::GetWindowLongPtr(m_hwnd, GWLP_WNDPROC);
   if(!wndProc) wndProc = (WNDPROC)::GetWindowLongPtr(m_hwnd, DWLP_DLGPROC);
   ::CallWindowProc(wndProc, m_hwnd, WM_PAINT, (WPARAM)hdcDraw, 0);

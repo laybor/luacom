@@ -203,19 +203,20 @@ int tLuaCOMEnumerator::callCOMmethod(lua_State* L, const char *name, int first_p
 
     VARIANT* pVar = new VARIANT[num_elements];
 
-    for(unsigned long counter = 0; counter <  num_elements; counter++)
+	unsigned long counter;
+    for(counter = 0; counter <  num_elements; counter++)
       VariantInit(&pVar[counter]);
 
     ULONG fetched = 0;
     hr = pEV->Next(num_elements, pVar, &fetched);
     
-    for(unsigned long counter = 0; counter < fetched; counter++)
+    for(counter = 0; counter < fetched; counter++)
     {
       typehandler->com2lua(L, pVar[counter]);
       typehandler->releaseVariant(&pVar[counter]);
     }
 
-    for(unsigned long counter = 0; counter <  num_elements; counter++)
+    for(counter = 0; counter <  num_elements; counter++)
       VariantClear(&pVar[counter]);
 
     delete[] pVar;
